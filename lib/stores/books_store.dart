@@ -1,4 +1,3 @@
-import 'package:book_reader/http/client_http.dart';
 import 'package:book_reader/repository/book_repository.dart';
 import 'package:mobx/mobx.dart';
 import '../models/book.dart';
@@ -8,9 +7,9 @@ part 'books_store.g.dart';
 class BooksStore = _BooksStore with _$BooksStore;
 
 abstract class _BooksStore with Store {
-  _BooksStore() {
-    getBooks();
-  }
+  final BookRepository bookRepository;
+
+  _BooksStore({required this.bookRepository});
 
   @observable
   ObservableList<Book> _books = ObservableList<Book>();
@@ -19,8 +18,11 @@ abstract class _BooksStore with Store {
   ObservableList<Book> get books => ObservableList.of(_books);
 
   @action
-  Future<void> getBooks() async {
-    final itens = await BookRepository(client: HttpClient()).getBooks();
-    _books.addAll(itens);
+  Future<List<Book>> getBooks() async {
+    final itens = await bookRepository.getBooks();
+
+    _books = ObservableList.of(itens);
+
+    return _books;
   }
 }

@@ -36,7 +36,7 @@ mixin _$BooksStore on _BooksStore, Store {
       AsyncAction('_BooksStore.getBooks', context: context);
 
   @override
-  Future<void> getBooks() {
+  Future<List<Book>> getBooks() {
     return _$getBooksAsyncAction.run(() => super.getBooks());
   }
 
