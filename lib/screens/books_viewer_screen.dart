@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class BooksViewerScreen extends StatefulWidget {
-  const BooksViewerScreen({super.key});
+  final BooksStore booksStore;
+
+  const BooksViewerScreen({super.key, required this.booksStore});
 
   @override
   State<BooksViewerScreen> createState() => _BooksViewerScreenState();
 }
 
 class _BooksViewerScreenState extends State<BooksViewerScreen> {
-  late BooksStore _booksStore;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _booksStore = BooksStore();
-    _booksStore.getBooks().then((_) {
+    widget.booksStore.getBooks().then((_) {
       setState(() => isLoading = false);
     });
   }
@@ -35,7 +35,7 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                 crossAxisCount: 3,
                 childAspectRatio: 2 / 3.6,
               ),
-              itemCount: _booksStore.books.length,
+              itemCount: widget.booksStore.books.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -52,7 +52,7 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(14),
                             child: Image.network(
-                                _booksStore.books[index].cover_url,
+                                widget.booksStore.books[index].cover_url,
                                 fit: BoxFit.cover),
                           ),
                         ),
@@ -62,7 +62,7 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  _booksStore.books[index].title,
+                                  widget.booksStore.books[index].title,
                                   style: const TextStyle(
                                     color: Colors.black87,
                                     fontWeight: FontWeight.w500,
@@ -71,7 +71,7 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  _booksStore.books[index].author,
+                                  widget.booksStore.books[index].author,
                                   maxLines: 1,
                                   style: const TextStyle(
                                       color: Colors.black54,
