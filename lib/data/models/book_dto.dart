@@ -1,4 +1,4 @@
-class Book {
+class BookDto {
   int id;
   String title;
   String author;
@@ -6,7 +6,7 @@ class Book {
   String download_url;
   bool isFavorite;
 
-  Book({
+  BookDto({
     required this.id,
     required this.title,
     required this.author,
@@ -25,8 +25,8 @@ class Book {
     };
   }
 
-  factory Book.fromJson(Map<String, dynamic> data) {
-    return Book(
+  factory BookDto.fromJson(Map<String, dynamic> data) {
+    return BookDto(
       id: data['id'],
       title: data['title'],
       author: data['author'],

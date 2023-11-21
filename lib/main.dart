@@ -1,8 +1,5 @@
-import 'package:book_reader/http/client_http.dart';
-import 'package:book_reader/repository/book_repository.dart';
-import 'package:book_reader/screens/books_viewer_screen.dart';
-import 'package:book_reader/screens/favorite_books_screen.dart';
-import 'package:book_reader/stores/books_store.dart';
+import 'package:book_reader/presentation/screens/books_viewer_screen.dart';
+import 'package:book_reader/presentation/screens/favorite_books_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,10 +27,7 @@ class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final List<Widget> _tabs = [
-    BooksViewerScreen(
-      booksStore:
-          BooksStore(bookRepository: BookRepository(client: HttpClient())),
-    ),
+    BooksViewerScreen(),
     FavoriteBooksScreen(),
   ];
 

@@ -1,30 +1,27 @@
 import 'dart:convert';
 
-import 'package:book_reader/consts/api_endpoint.dart';
-import 'package:book_reader/http/client_http.dart';
-import 'package:book_reader/http/errors.dart';
+import '../../shared/consts/api_endpoint.dart';
+import '../../shared/http/client_http.dart';
+import '../../shared/http/errors.dart';
 
-import '../models/book.dart';
+import '../models/book_dto.dart';
+import 'book_repository.dart';
 
-abstract class IBookRepository {
-  Future<List<Book>> getBooks();
-}
-
-class BookRepository implements IBookRepository {
+class BookRepositoryImpl implements BookRepository {
   final HttpClient client;
 
-  BookRepository({
+  BookRepositoryImpl({
     required this.client,
   });
 
   @override
-  Future<List<Book>> getBooks() async {
+  Future<List<BookDto>> getBooks() async {
     final response = await client.get(url: Endpoint.books);
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
 
-      List<Book> books = body.map((book) => Book.fromJson(book)).toList();
+      List<BookDto> books = body.map((book) => BookDto.fromJson(book)).toList();
 
       return books;
     } else if (response.statusCode == 404) {

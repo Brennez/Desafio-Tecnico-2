@@ -32,12 +32,20 @@ mixin _$BooksStore on _BooksStore, Store {
     });
   }
 
-  late final _$getBooksAsyncAction =
-      AsyncAction('_BooksStore.getBooks', context: context);
+  late final _$loadBooksAsyncAction =
+      AsyncAction('_BooksStore.loadBooks', context: context);
 
   @override
-  Future<List<Book>> getBooks() {
-    return _$getBooksAsyncAction.run(() => super.getBooks());
+  Future<List<Book>> loadBooks() {
+    return _$loadBooksAsyncAction.run(() => super.loadBooks());
+  }
+
+  late final _$ToogleFavoriteAsyncAction =
+      AsyncAction('_BooksStore.ToogleFavorite', context: context);
+
+  @override
+  Future<void> ToogleFavorite(Book book) {
+    return _$ToogleFavoriteAsyncAction.run(() => super.ToogleFavorite(book));
   }
 
   @override
