@@ -1,5 +1,9 @@
+import 'package:book_reader/data/repositories/favorite_repository_impl.dart';
+import 'package:book_reader/domain/use_cases/get_books_usecase.dart';
+import 'package:book_reader/domain/use_cases/toggle_favorite_use_case.dart';
 import 'package:book_reader/presentation/screens/books_viewer_screen.dart';
 import 'package:book_reader/presentation/screens/favorite_books_screen.dart';
+import 'package:book_reader/presentation/stores/books_store.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -23,12 +27,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
+BooksStore booksStore = BooksStore(
+  getBooksUseCase: GetBooksUseCaseImpl(),
+  toggleFavoriteUseCase: ToggleFavoriteUseCaseImpl(
+    favoriteRepository: FavoriteRepositoryImpl(),
+  ),
+);
+
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final List<Widget> _tabs = [
-    BooksViewerScreen(),
-    FavoriteBooksScreen(),
+    BooksViewerScreen(booksStore: booksStore),
+    FavoriteBooksScreen(booksStore: booksStore),
   ];
 
   @override
@@ -37,7 +48,7 @@ class HomePage extends StatelessWidget {
       length: _tabs.length,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xff7A7DD3),
+          backgroundColor: const Color(0xff7A7DD3),
           elevation: 0,
           bottom: const TabBar(tabs: [
             Tab(
