@@ -4,7 +4,8 @@ import 'favorite_repository.dart';
 
 class FavoriteRepositoryImpl implements FavoriteRepository {
   @override
-  void toogleFavorite(BookDto book) {
+  BookDto toogleFavorite(BookDto book) {
     book.isFavorite = !book.isFavorite;
+    return book;
   }
 }
