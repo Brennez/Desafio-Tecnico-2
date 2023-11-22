@@ -21,13 +21,14 @@ class BooksViewerScreen extends StatefulWidget {
 
 class _BooksViewerScreenState extends State<BooksViewerScreen> {
   final platform = MethodChannel('my_channel');
-
-  bool isLoading = true;
   bool loading = false;
 
   String filePath = "";
-  String bookName = "";
-  String downloadUrl = "";
+
+  String? downloadUrl;
+  String? bookName;
+
+  bool isLoading = true;
 
   Dio dio = Dio();
 
@@ -40,6 +41,44 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
         isLoading = false;
       });
     });
+  }
+
+  startDownload() async {
+    setState(() {
+      loading = true;
+    });
+    Directory? appDocDir = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationDocumentsDirectory();
+
+    String path = appDocDir!.path + '/${bookName}.epub';
+    File file = File(path);
+
+    if (!File(path).existsSync()) {
+      await file.create();
+      if (downloadUrl == null) return;
+      await dio.download(
+        downloadUrl!,
+        path,
+        deleteOnError: true,
+        onReceiveProgress: (receivedBytes, totalBytes) {
+          print('Download --- ${(receivedBytes / totalBytes) * 100}');
+          setState(() {
+            loading = true;
+          });
+        },
+      ).whenComplete(() {
+        setState(() {
+          loading = false;
+          filePath = path;
+        });
+      });
+    } else {
+      setState(() {
+        loading = false;
+        filePath = path;
+      });
+    }
   }
 
   Future<String?> getAndroidVersion() async {
@@ -92,45 +131,6 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
     }
   }
 
-  startDownload() async {
-    setState(() {
-      loading = true;
-    });
-    Directory? appDocDir = Platform.isAndroid
-        ? await getExternalStorageDirectory()
-        : await getApplicationDocumentsDirectory();
-
-    String path = '${appDocDir!.path}/$bookName.epub';
-    File file = File(path);
-
-    if (!File(path).existsSync()) {
-      await file.create();
-      if (downloadUrl.isNotEmpty) {
-        await dio.download(
-          downloadUrl,
-          path,
-          deleteOnError: true,
-          onReceiveProgress: (receivedBytes, totalBytes) {
-            print('Download --- ${(receivedBytes / totalBytes) * 100}');
-            setState(() {
-              loading = true;
-            });
-          },
-        ).whenComplete(() {
-          setState(() {
-            loading = false;
-            filePath = path;
-          });
-        });
-      }
-    } else {
-      setState(() {
-        loading = false;
-        filePath = path;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -152,14 +152,18 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () async {
-                      bookName = booksStore.books[index].title;
-                      downloadUrl = booksStore.books[index].download_url;
+                      downloadUrl = widget.booksStore.books[index].download_url;
+
+                      print('LINK: ${downloadUrl}');
+
+                      bookName = widget.booksStore.books[index].title;
+
+                      print('NOME DO LIVRO: ${bookName}');
 
                       print("=====filePath======$filePath");
 
                       if (filePath == "") {
-                        download();
-                      } else {
+                        await download();
                         VocsyEpub.setConfig(
                           themeColor: Theme.of(context).primaryColor,
                           identifier: "iosBook",
@@ -168,7 +172,6 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                           enableTts: true,
                           nightMode: true,
                         );
-
                         // get current locator
                         VocsyEpub.locatorStream.listen((locator) {
                           print('LOCATOR: $locator');
@@ -177,7 +180,34 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                         VocsyEpub.open(
                           filePath,
                           lastLocation: EpubLocator.fromJson({
-                            "bookId": "2239",
+                            "bookId": "${booksStore.books[index].id}",
+                            "href": "/OEBPS/ch06.xhtml",
+                            "created": 1539934158390,
+                            "locations": {
+                              "cfi": "epubcfi(/0!/4/4[simple_book]/2/2/6)"
+                            }
+                          }),
+                        );
+                      } else {
+                        await download();
+
+                        VocsyEpub.setConfig(
+                          themeColor: Theme.of(context).primaryColor,
+                          identifier: "iosBook",
+                          scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
+                          allowSharing: true,
+                          enableTts: true,
+                          nightMode: true,
+                        );
+                        // get current locator
+                        VocsyEpub.locatorStream.listen((locator) {
+                          print('LOCATOR: $locator');
+                        });
+
+                        VocsyEpub.open(
+                          filePath,
+                          lastLocation: EpubLocator.fromJson({
+                            "bookId": "${booksStore.books[index].id}",
                             "href": "/OEBPS/ch06.xhtml",
                             "created": 1539934158390,
                             "locations": {
