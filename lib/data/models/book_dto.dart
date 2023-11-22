@@ -1,3 +1,5 @@
+import '../../domain/entities/book.dart';
+
 class BookDto {
   int id;
   String title;
@@ -22,6 +24,7 @@ class BookDto {
       'author': author,
       'cover_url': cover_url,
       'download_url': download_url,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -32,6 +35,17 @@ class BookDto {
       author: data['author'],
       cover_url: data['cover_url'],
       download_url: data['download_url'],
+    );
+  }
+
+  Book toEntity() {
+    return Book(
+      id: id,
+      title: title,
+      author: author,
+      cover_url: cover_url,
+      download_url: download_url,
+      isFavorite: isFavorite,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:book_reader/domain/use_cases/fliter_by_favorites_usecase.dart';
 import 'package:book_reader/domain/use_cases/get_books_usecase.dart';
 import 'package:book_reader/domain/use_cases/toggle_favorite_use_case.dart';
 import 'package:mobx/mobx.dart';
@@ -10,15 +11,20 @@ class BooksStore = _BooksStore with _$BooksStore;
 
 abstract class _BooksStore with Store {
   final GetBooksUseCase getBooksUseCase;
+
   final ToggleFavoriteUseCase toggleFavoriteUseCase;
 
   _BooksStore(
-      {required this.getBooksUseCase, required this.toggleFavoriteUseCase}) {
-    loadBooks();
-  }
+      {required this.getBooksUseCase, required this.toggleFavoriteUseCase});
 
   @observable
   ObservableList<Book> _books = ObservableList<Book>();
+
+  @observable
+  ObservableList<Book> _favoriteBooks = ObservableList<Book>();
+
+  @computed
+  ObservableList<Book> get favoriteBooks => ObservableList.of(_favoriteBooks);
 
   @computed
   ObservableList<Book> get books => ObservableList.of(_books);
@@ -33,8 +39,14 @@ abstract class _BooksStore with Store {
   }
 
   @action
-  Future<void> ToogleFavorite(Book book) async {
-    toggleFavoriteUseCase.execute(book);
-    await loadBooks();
+  Future<void> toogleFavorite(Book book) async {
+    final newBook = toggleFavoriteUseCase.execute(book);
+    _books[_books.indexOf(book)] = newBook.toEntity();
+  }
+
+  @action
+  void loadFavorites() {
+    _favoriteBooks =
+        ObservableList.of(FilterByFavoritesUseCaseImpl().execute(_books));
   }
 }
