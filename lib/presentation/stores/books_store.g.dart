@@ -63,12 +63,12 @@ mixin _$BooksStore on _BooksStore, Store {
     return _$loadBooksAsyncAction.run(() => super.loadBooks());
   }
 
-  late final _$toogleFavoriteAsyncAction =
-      AsyncAction('_BooksStore.toogleFavorite', context: context);
+  late final _$toggleFavoriteAsyncAction =
+      AsyncAction('_BooksStore.toggleFavorite', context: context);
 
   @override
-  Future toogleFavorite(Book book) {
-    return _$toogleFavoriteAsyncAction.run(() => super.toogleFavorite(book));
+  Future<void> toggleFavorite(Book book) {
+    return _$toggleFavoriteAsyncAction.run(() => super.toggleFavorite(book));
   }
 
   late final _$_BooksStoreActionController =

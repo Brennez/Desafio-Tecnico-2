@@ -39,8 +39,9 @@ abstract class _BooksStore with Store {
   }
 
   @action
-  Future<void> toogleFavorite(Book book) async {
+  Future<void> toggleFavorite(Book book) async {
     final newBook = toggleFavoriteUseCase.execute(book);
+
     _books[_books.indexOf(book)] = newBook.toEntity();
   }
 

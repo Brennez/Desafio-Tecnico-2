@@ -2,7 +2,7 @@ import 'package:book_reader/presentation/stores/books_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../components/book_component.dart';
+import '../../main.dart';
 
 class FavoriteBooksScreen extends StatefulWidget {
   final BooksStore booksStore;
@@ -30,16 +30,56 @@ class _FavoriteBooksScreenState extends State<FavoriteBooksScreen> {
         ),
         itemCount: widget.booksStore.favoriteBooks.length,
         itemBuilder: (context, index) {
-          bool isFavorite = widget.booksStore.books[index].isFavorite;
-
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: () {},
-              child: BookComponent(
-                booksStore: widget.booksStore,
-                index: index,
-                isBookFavorite: isFavorite,
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        height: 180,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: Image.network(
+                              booksStore.favoriteBooks[index].cover_url,
+                              fit: BoxFit.cover),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              booksStore.favoriteBooks[index].title,
+                              style: const TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              booksStore.favoriteBooks[index].author,
+                              maxLines: 1,
+                              style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );
