@@ -154,16 +154,11 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                     onTap: () async {
                       downloadUrl = widget.booksStore.books[index].download_url;
 
-                      print('LINK: ${downloadUrl}');
-
                       bookName = widget.booksStore.books[index].title;
-
-                      print('NOME DO LIVRO: ${bookName}');
-
-                      print("=====filePath======$filePath");
 
                       if (filePath == "") {
                         await download();
+
                         VocsyEpub.setConfig(
                           themeColor: Theme.of(context).primaryColor,
                           identifier: "iosBook",

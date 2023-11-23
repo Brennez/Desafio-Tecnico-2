@@ -21,7 +21,7 @@ class BookRepositoryImpl implements BookRepository {
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
 
-      List<BookDto> books = body.map((book) => BookDto.fromJson(book)).toList();
+      List<BookDto> books = body.map((book) => BookDto.fromMap(book)).toList();
 
       return books;
     } else if (response.statusCode == 404) {

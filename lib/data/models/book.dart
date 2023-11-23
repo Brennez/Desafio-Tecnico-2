@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import '../../domain/entities/book.dart';
-
-class BookDto {
+class Book {
   int id;
   String title;
   String author;
@@ -10,7 +6,7 @@ class BookDto {
   String download_url;
   bool isFavorite;
 
-  BookDto({
+  Book({
     required this.id,
     required this.title,
     required this.author,
@@ -30,8 +26,8 @@ class BookDto {
     };
   }
 
-  factory BookDto.fromMap(Map<String, dynamic> data) {
-    return BookDto(
+  factory Book.fromJson(Map<String, dynamic> data) {
+    return Book(
       id: data['id'],
       title: data['title'],
       author: data['author'],
@@ -39,11 +35,6 @@ class BookDto {
       download_url: data['download_url'],
     );
   }
-
-  String toJson() => jsonEncode(toMap());
-
-  factory BookDto.fromJson(String source) =>
-      BookDto.fromMap(jsonDecode(source));
 
   Book toEntity() {
     return Book(

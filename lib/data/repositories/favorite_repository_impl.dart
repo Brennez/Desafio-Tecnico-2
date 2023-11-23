@@ -1,5 +1,4 @@
-import 'package:book_reader/data/models/book_dto.dart';
-
+import '../models/book_dto.dart';
 import 'favorite_repository.dart';
 
 class FavoriteRepositoryImpl implements FavoriteRepository {

@@ -71,6 +71,33 @@ mixin _$BooksStore on _BooksStore, Store {
     return _$toggleFavoriteAsyncAction.run(() => super.toggleFavorite(book));
   }
 
+  late final _$_loadFavoriteBooksAsyncAction =
+      AsyncAction('_BooksStore._loadFavoriteBooks', context: context);
+
+  @override
+  Future<void> _loadFavoriteBooks() {
+    return _$_loadFavoriteBooksAsyncAction
+        .run(() => super._loadFavoriteBooks());
+  }
+
+  late final _$_saveFavoriteBookAsyncAction =
+      AsyncAction('_BooksStore._saveFavoriteBook', context: context);
+
+  @override
+  Future<void> _saveFavoriteBook(int bookId, bool value) {
+    return _$_saveFavoriteBookAsyncAction
+        .run(() => super._saveFavoriteBook(bookId, value));
+  }
+
+  late final _$_loadIsFavoritPreferencesAsyncAction =
+      AsyncAction('_BooksStore._loadIsFavoritPreferences', context: context);
+
+  @override
+  Future<bool?> _loadIsFavoritPreferences(int bookId) {
+    return _$_loadIsFavoritPreferencesAsyncAction
+        .run(() => super._loadIsFavoritPreferences(bookId));
+  }
+
   late final _$_BooksStoreActionController =
       ActionController(name: '_BooksStore', context: context);
 
