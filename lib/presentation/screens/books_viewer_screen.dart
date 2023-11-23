@@ -23,6 +23,7 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
   final platform = MethodChannel('my_channel');
   bool loading = false;
 
+  bool isShowLoading = false;
   String filePath = "";
 
   String? downloadUrl;
@@ -138,8 +139,8 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
             builder: (context) =>
                 const Center(child: CircularProgressIndicator()),
           )
-        : Observer(
-            builder: (context) => GridView.builder(
+        : Observer(builder: (context) {
+            return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: 2 / 3.6,
@@ -157,7 +158,15 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                       bookName = widget.booksStore.books[index].title;
 
                       if (filePath == "") {
-                        await download();
+                        setState(() {
+                          isShowLoading = true;
+                        });
+
+                        await download().then((value) {
+                          setState(() {
+                            isShowLoading = false;
+                          });
+                        });
 
                         VocsyEpub.setConfig(
                           themeColor: Theme.of(context).primaryColor,
@@ -184,7 +193,14 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                           }),
                         );
                       } else {
-                        await download();
+                        setState(() {
+                          isShowLoading = true;
+                        });
+                        await download().then((value) {
+                          setState(() {
+                            isShowLoading = false;
+                          });
+                        });
 
                         VocsyEpub.setConfig(
                           themeColor: Theme.of(context).primaryColor,
@@ -212,74 +228,79 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                         );
                       }
                     },
-                    child: Stack(
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              height: 180,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(14),
-                                child: Image.network(
-                                    booksStore.books[index].cover_url,
-                                    fit: BoxFit.cover),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 200,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                    child: isShowLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Stack(
+                            children: [
+                              Column(
                                 children: [
-                                  Text(
-                                    booksStore.books[index].title,
-                                    style: const TextStyle(
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.w500,
+                                  Container(
+                                    height: 180,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(14),
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(14),
+                                      child: Image.network(
+                                          booksStore.books[index].cover_url,
+                                          fit: BoxFit.cover),
+                                    ),
                                   ),
-                                  Text(
-                                    booksStore.books[index].author,
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                        color: Colors.black54,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                    overflow: TextOverflow.ellipsis,
+                                  SizedBox(
+                                    width: 200,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          booksStore.books[index].title,
+                                          style: const TextStyle(
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          booksStore.books[index].author,
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                        Positioned(
-                          left: 60,
-                          top: -4,
-                          child: IconButton(
-                            onPressed: () => booksStore
-                                .toggleFavorite(booksStore.books[index]),
-                            icon: Icon(
-                              isFavorite
-                                  ? Icons.bookmark_outlined
-                                  : Icons.bookmark_outline,
-                              color: isFavorite
-                                  ? Colors.red
-                                  : const Color(0xff7A7DD3),
-                              size: 50,
-                            ),
+                              Positioned(
+                                left: 60,
+                                top: -4,
+                                child: IconButton(
+                                  onPressed: () => booksStore
+                                      .toggleFavorite(booksStore.books[index]),
+                                  icon: Icon(
+                                    isFavorite
+                                        ? Icons.bookmark_outlined
+                                        : Icons.bookmark_outline,
+                                    color: isFavorite
+                                        ? Colors.red
+                                        : const Color(0xff7A7DD3),
+                                    size: 50,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
-                    ),
                   ),
                 );
               },
-            ),
-          );
+            );
+          });
   }
 }
