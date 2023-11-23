@@ -52,7 +52,7 @@ flutter install
 - Você também pode baixar o app clicando em `releases` no canto direito deste repositório.
 
 ## ⚠️ Informações úteis
-- O livro é após ser baixado encontra-se no diretório: `Android/data/com.example.book_reader/files/` 
+- O livro após ser baixado encontra-se no diretório: `Android/data/com.example.book_reader/files/` 
 
 - Por melhor do meu conhecimento, a implementação do botão de retorno à tela principal após a abertura da tela de leitura se mostrou inviável ao utilizar o pacote `Vocsy Epub Viewer`. Uma issue foi aberta para discutir essa questão no repositório do pacote, e você pode encontrá-la no seguinte link: [Issue](https://github.com/kaushikgodhani/vocsy_epub_viewer/issues/44).
 
