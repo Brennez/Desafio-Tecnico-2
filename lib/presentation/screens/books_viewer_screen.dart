@@ -165,7 +165,7 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                           scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
                           allowSharing: true,
                           enableTts: true,
-                          nightMode: true,
+                          nightMode: false,
                         );
                         // get current locator
                         VocsyEpub.locatorStream.listen((locator) {
@@ -192,7 +192,7 @@ class _BooksViewerScreenState extends State<BooksViewerScreen> {
                           scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
                           allowSharing: true,
                           enableTts: true,
-                          nightMode: true,
+                          nightMode: false,
                         );
                         // get current locator
                         VocsyEpub.locatorStream.listen((locator) {
